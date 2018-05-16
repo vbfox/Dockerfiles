@@ -1,4 +1,4 @@
-FROM microsoft/aspnetcore-build:2.0.8-2.1.200-stretch AS builder
+FROM microsoft/aspnetcore-build:2.0.8-2.1.200-stretch
 
 ENV MONO_VERSION 5.10.0.160
 ENV YARN_VERSION 1.6.0
