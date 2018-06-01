@@ -27,5 +27,6 @@ docker run -it -v C:\Downloads\zabbix:C:\build\zabbix vbfox/zabbix-build powersh
 It will put the result in `C:\Downloads\zabbix\win64`.
 
 Tested with
+
 - [Zabbix 3.4.9](https://sourceforge.net/projects/zabbix/files/ZABBIX%20Latest%20Stable/3.4.9/zabbix-3.4.9.tar.gz/download)
 - PCRE 8.41: `ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.41.zip`
