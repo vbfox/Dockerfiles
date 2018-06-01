@@ -6,12 +6,14 @@ As Zabbix doesn't provide builds with TLS enabled here is an image that can prod
 
 ## Building the image
 
-As the VS Build Tools are large the size of the docker builder need to be made larger, see [Microsoft documentation][large-container].
+Docker should be in Windows container mode (Require a recent Windows 10 or server 2016 machine)
+
+As the VS Build Tools are large the maximum size of docker containers need to be made larger, see [Microsoft documentation][large-container] for documentation on how to change that.
 
 [large-container]: https://docs.microsoft.com/en-us/visualstudio/install/build-tools-container#step-4-expand-maximum-container-disk-size
 
 ```cmd
-docker build -t vbfox/zabbix-build:latest -m 4GB .
+docker build -t vbfox/zabbix-build:latest -m 2GB .
 ```
 
 ## Usage
