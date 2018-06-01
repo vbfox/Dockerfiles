@@ -8,8 +8,8 @@ mkdir src
 Push-Location
 $pcreArchive = @(Get-ChildItem -Path 'zabbix' 'pcre-*.zip')[0].FullName
 & .\7za.exe x -osrc $pcreArchive
-cd src
-cd @(Get-ChildItem 'pcre-*')[0]
+Set-Location src
+Set-Location @(Get-ChildItem 'pcre-*')[0]
 $pcreSrc = (Get-Location).Path
 $env:PATH += ';C:\Program Files\CMake\bin'
 cmake -G "Visual Studio 14 2015 Win64" -DPCRE_SUPPORT_UNICODE_PROPERTIES=ON -DPCRE_SUPPORT_UTF=ON -DCMAKE_C_FLAGS_RELEASE:string="/MT"
@@ -19,14 +19,14 @@ Pop-Location
 # UNZIP ZABBIX
 $zabbixArchive = @(Get-ChildItem -Path 'zabbix' 'zabbix-*.tar.gz')[0].FullName
 & cmd.exe "/C 7za.exe x -so $zabbixArchive | 7za.exe x -si -ttar -osrc"
-cd src
-cd @(Get-ChildItem 'zabbix-*')[0]
+Set-Location src
+Set-Location @(Get-ChildItem 'zabbix-*')[0]
 $src = (Get-Location).Path
 Remove-Item 'bin\win64\*' -Force -Recurse -ErrorAction SilentlyContinue
 mkdir 'bin\win64\dev'
 
 # TWEAK
-cd build\win32\project
+Set-Location build\win32\project
 (Get-Content Makefile_sender_dll).replace('..\..\..\src\zabbix_sender\win32\zabbix_sender.o', '..\..\..\src\zabbix_sender\zabbix_sender.o') | Set-Content Makefile_sender_dll
 
 # BUILD
