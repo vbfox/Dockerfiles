@@ -1,7 +1,7 @@
 # escape=`
 
 # Use the latest Windows Server Core image with .NET Framework 4.7.1.
-FROM microsoft/dotnet-framework:4.7.1
+FROM microsoft/dotnet-framework:4.7.2-runtime
 
 WORKDIR C:\Temp
 
