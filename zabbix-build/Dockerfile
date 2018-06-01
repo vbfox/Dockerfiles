@@ -25,6 +25,9 @@ RUN powershell -Command (New-Object net.webclient).Downloadfile('https://slprowe
 
 RUN C:\TEMP\OpenSSL.exe /VERYSILENT /SUPPRESSMSGBOXES
 
+RUN powershell -Command (New-Object net.webclient).Downloadfile('https://cmake.org/files/v3.11/cmake-3.11.3-win64-x64.msi', 'cmake.msi')
+RUN msiexec /i cmake.msi /quiet /qn /norestart
+
 WORKDIR C:\Build
 
 ADD 7za.exe Build.ps1 C:\Build\
