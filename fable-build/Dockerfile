@@ -2,18 +2,17 @@ ARG ASPNET_VERSION=2.1.300
 
 FROM microsoft/dotnet:${ASPNET_VERSION}-sdk-stretch
 
-ARG MONO_VERSION=5.10.0.160
-ARG YARN_VERSION=1.6.0
-
 # Install Mono
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-RUN echo "deb http://download.mono-project.com/repo/debian stable-jessie/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official-stable.list \
+ARG MONO_VERSION=5.10.0.160
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
+  && echo "deb http://download.mono-project.com/repo/debian stable-jessie/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official-stable.list \
   && cat /etc/apt/sources.list.d/mono-official-stable.list \
   && apt-get update \
   && apt-get install -y mono-runtime binutils curl mono-devel ca-certificates-mono fsharp mono-vbnc nuget referenceassemblies-pcl \
   && rm -rf /var/lib/apt/lists/* /tmp/*
 
 # Install Yarn
+ARG YARN_VERSION=1.7.0
 RUN set -ex \
   && for key in \
     E21930C4D0A4AA4618581F7AE074D16EB6FF4DE3 \
