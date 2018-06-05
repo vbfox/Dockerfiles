@@ -1,11 +1,14 @@
-FROM microsoft/aspnetcore-build:2.0.8-2.1.200-stretch
+ARG ASPNET_VERSION=2.1.300
 
-ENV MONO_VERSION 5.10.0.160
-ENV YARN_VERSION 1.6.0
+FROM microsoft/dotnet:${ASPNET_VERSION}-sdk-stretch
+
+ARG MONO_VERSION=5.10.0.160
+ARG YARN_VERSION=1.6.0
 
 # Install Mono
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
 RUN echo "deb http://download.mono-project.com/repo/debian stable-jessie/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official-stable.list \
+  && cat /etc/apt/sources.list.d/mono-official-stable.list \
   && apt-get update \
   && apt-get install -y mono-runtime binutils curl mono-devel ca-certificates-mono fsharp mono-vbnc nuget referenceassemblies-pcl \
   && rm -rf /var/lib/apt/lists/* /tmp/*
