@@ -73,4 +73,18 @@ RUN set -ex \
   && ln -s /opt/yarn/bin/yarn /usr/local/bin/yarnpkg \
   && rm yarn-v$YARN_VERSION.tar.gz.asc yarn-v$YARN_VERSION.tar.gz
 
+# Install Chrome driver (For testing in selenium)
+# For selenium to work it need an X server running, xvfb is a framebuffer based one and can be used like that:
+#     xvfb-run -a ./your-build-script-using-selenium.sh
+ENV CHROME_DRIVER_VERSION 2.40
+
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+      && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
+      && apt-get update \
+      && apt-get install xvfb unzip google-chrome-stable -y \
+      && rm -rf /var/lib/apt/lists/* /tmp/* \
+      && wget https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
+      && unzip -d /usr/local/bin chromedriver_linux64.zip \
+      && rm chromedriver_linux64.zip
+
 CMD ["bash"]
