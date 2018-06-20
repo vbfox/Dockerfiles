@@ -6,8 +6,19 @@ These images contains full build environments for [Fable](http://fable.io) (F# t
 * .Net Framework (The Full one on Windows or [Mono](https://www.mono-project.com/) on Linux)
 * [NodeJs](https://nodejs.org)
 * [Yarn](https://yarnpkg.com)
+* [Google Chrome](https://chrome.google.com) and it's [WebDriver](https://sites.google.com/a/chromium.org/chromedriver/) for client tests like [Selenium](https://docs.seleniumhq.org/) **LINUX IMAGE ONLY**
 
 ## Tags
 
 * `latest`, `stretch`, `stretch-aspnet-2.1.301-node-10.5.0`, `stretch-aspnet-2.1.301-mono-5.12.0.226-node-10.5.0-yarn-1.7.0` [(fable-build/Dockerfile)](https://github.com/vbfox/Dockerfiles/blob/master/fable-build/Dockerfile)
 * `windowsservercore`, `windowsservercore-aspnet-2.1.301-node-10.5.0` `windowsservercore-1803-aspnet-2.1.301-framework-4.7.2-sdk-node-10.5.0-yarn-1.7.0` [(fable-build-windows/Dockerfile)](https://github.com/vbfox/Dockerfiles/blob/master/fable-build-windows/Dockerfile)
+
+## WebDriver Usage
+
+For the WebDriver to work an X server must be active, the image contains the virtual framebuffer implementation  [XVFB](https://www.x.org/releases/X11R7.6/doc/man/man1/Xvfb.1.xhtml).
+
+To use it wrap your test script with `xvfb-run -a` like:
+
+```bash
+xvfb-run -a ./your-build-script-using-selenium.sh
+```
