@@ -1,6 +1,6 @@
 # escape=`
 
-FROM microsoft/dotnet-framework:4.7.2-sdk
+FROM microsoft/dotnet-framework:4.7.2-sdk-windowsservercore-1803
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
