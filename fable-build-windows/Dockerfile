@@ -7,9 +7,10 @@ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPref
 #-----------------------------------------------------------------
 # Updated .NET Core version (Sometimes unnecessary, depend on the version embeded with the main framework)
 
+ENV DOTNET_SDK_VERSION 2.1.301
 RUN Remove-Item -Force -Recurse $Env:ProgramFiles\dotnet; `
-    Invoke-WebRequest -OutFile dotnet.zip https://download.microsoft.com/download/8/8/5/88544F33-836A-49A5-8B67-451C24709A8F/dotnet-sdk-2.1.300-win-x64.zip; `
-    $dotnet_sha512 = '4aa6ff6aa51e1d71733944e10fd9e37647a58df7efbc76f432b8c3ffa3f617f9da36f72532175a1e765dbaf4598a14350017342d5f776dfe8e25d5049696d003'; `
+    Invoke-WebRequest -OutFile dotnet.zip https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$Env:DOTNET_SDK_VERSION/dotnet-sdk-$Env:DOTNET_SDK_VERSION-win-x64.zip; `
+    $dotnet_sha512 = 'f2f6cc020f89dc4d4f8064cc914cffabde0ce422715138778a6bcbbb6803ca66d6fd967097a0209c47c89b85dd9e93db48486ac86999bd3a533e45b789fcea89'; `
     if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
         Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
         exit 1; `
@@ -32,15 +33,15 @@ ENV ASPNETCORE_URLS=http://+:80 `
 # Trigger first run experience by running arbitrary cmd to populate local package cache
 RUN dotnet help
 
-RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
 #-----------------------------------------------------------------
 # NodeJS
-RUN Invoke-WebRequest -OutFile nodejs.msi 'https://nodejs.org/dist/v8.11.2/node-v8.11.2-x64.msi'; `
+ENV NODE_VERSION 10.5.0
+RUN Invoke-WebRequest -OutFile nodejs.msi "https://nodejs.org/dist/v$Env:NODE_VERSION/node-v$Env:NODE_VERSION-x64.msi"; `
     `
-    $nodejs_sha256 = '108DD9CCD131931E42B57DC1243DC28AACFEBE207DE48C420A576FE453D33ED7'; `
-    if ((Get-FileHash nodejs.msi -Algorithm sha256).Hash -ne $nodejs_sha256) { `
-        Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
+    $expected = 'BAEE3A34ECBE9040C6DA8F01EB61BDE563A0458A94401A80DD87229FC938ADD4'; `
+    $actual = (Get-FileHash nodejs.msi -Algorithm sha256).Hash; `
+    if ($actual -ne $expected) { `
+        Write-Host "CHECKSUM VERIFICATION FAILED! FOUND $actual expected $expected"; `
         exit 1; `
     }; `
     `
@@ -49,11 +50,13 @@ RUN Invoke-WebRequest -OutFile nodejs.msi 'https://nodejs.org/dist/v8.11.2/node-
 
 #-----------------------------------------------------------------
 # Yarn
+ENV YARN_VERSION 1.7.0
 RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; `
-    Invoke-WebRequest -OutFile yarn.msi https://github.com/yarnpkg/yarn/releases/download/v1.7.0/yarn-1.7.0.msi; `
-    $yarn_sha256 = '133EE49AC1000D5AC6DCB233D10E70B860F1A710CE257237A37CFEA32F5972AF'; `
-    if ((Get-FileHash yarn.msi -Algorithm sha256).Hash -ne $yarn_sha256) { `
-        Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
+    Invoke-WebRequest -OutFile yarn.msi "https://github.com/yarnpkg/yarn/releases/download/v$Env:YARN_VERSION/yarn-$Env:YARN_VERSION.msi"; `
+    $expected = '133EE49AC1000D5AC6DCB233D10E70B860F1A710CE257237A37CFEA32F5972AF'; `
+    $actual = (Get-FileHash yarn.msi -Algorithm sha256).Hash; `
+    if ($actual -ne $expected) { `
+        Write-Host "CHECKSUM VERIFICATION FAILED! FOUND $actual expected $expected"; `
         exit 1; `
     }; `
     `
