@@ -1,18 +1,19 @@
 # escape=`
 
-FROM microsoft/dotnet-framework:4.7.2-sdk-windowsservercore-1803
+FROM microsoft/dotnet-framework:4.7.2-sdk-20180814-windowsservercore-1803
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 #-----------------------------------------------------------------
 # Updated .NET Core version (Sometimes unnecessary, depend on the version embeded with the main framework)
 
-ENV DOTNET_SDK_VERSION 2.1.301
+ENV DOTNET_SDK_VERSION 2.1.401
 RUN Remove-Item -Force -Recurse $Env:ProgramFiles\dotnet; `
     Invoke-WebRequest -OutFile dotnet.zip https://dotnetcli.blob.core.windows.net/dotnet/Sdk/$Env:DOTNET_SDK_VERSION/dotnet-sdk-$Env:DOTNET_SDK_VERSION-win-x64.zip; `
-    $dotnet_sha512 = 'f2f6cc020f89dc4d4f8064cc914cffabde0ce422715138778a6bcbbb6803ca66d6fd967097a0209c47c89b85dd9e93db48486ac86999bd3a533e45b789fcea89'; `
-    if ((Get-FileHash dotnet.zip -Algorithm sha512).Hash -ne $dotnet_sha512) { `
-        Write-Host 'CHECKSUM VERIFICATION FAILED!'; `
+    $expected = '7D017487C1A11AE4DB862B1EFA7BA9BEB0EABCF5D2467BC4055AA2227A548663A596682FF4ADBA4688930B22472587F29B83BCE9F689EFC5E9F4E37F7EDDA000'; `
+    $actual = (Get-FileHash dotnet.zip -Algorithm sha512).Hash; `
+    if ($actual -ne $expected) { `
+        Write-Host "CHECKSUM VERIFICATION FAILED! FOUND $actual expected $expected"; `
         exit 1; `
     }; `
     `
@@ -35,10 +36,10 @@ RUN dotnet help
 
 #-----------------------------------------------------------------
 # NodeJS
-ENV NODE_VERSION 10.5.0
+ENV NODE_VERSION 10.9.0
 RUN Invoke-WebRequest -OutFile nodejs.msi "https://nodejs.org/dist/v$Env:NODE_VERSION/node-v$Env:NODE_VERSION-x64.msi"; `
     `
-    $expected = 'BAEE3A34ECBE9040C6DA8F01EB61BDE563A0458A94401A80DD87229FC938ADD4'; `
+    $expected = '67B7DACA5E4C2B25B18024230AF5CA205717317CA1A561F4F087C2DA2E4D77F3'; `
     $actual = (Get-FileHash nodejs.msi -Algorithm sha256).Hash; `
     if ($actual -ne $expected) { `
         Write-Host "CHECKSUM VERIFICATION FAILED! FOUND $actual expected $expected"; `
@@ -50,10 +51,10 @@ RUN Invoke-WebRequest -OutFile nodejs.msi "https://nodejs.org/dist/v$Env:NODE_VE
 
 #-----------------------------------------------------------------
 # Yarn
-ENV YARN_VERSION 1.7.0
+ENV YARN_VERSION 1.9.4
 RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; `
     Invoke-WebRequest -OutFile yarn.msi "https://github.com/yarnpkg/yarn/releases/download/v$Env:YARN_VERSION/yarn-$Env:YARN_VERSION.msi"; `
-    $expected = '133EE49AC1000D5AC6DCB233D10E70B860F1A710CE257237A37CFEA32F5972AF'; `
+    $expected = '5CA0ADB78D2F3A718D7A1FEEF0496D8EAD9BCA599367DFF0F98CD742D5A72FDD'; `
     $actual = (Get-FileHash yarn.msi -Algorithm sha256).Hash; `
     if ($actual -ne $expected) { `
         Write-Host "CHECKSUM VERIFICATION FAILED! FOUND $actual expected $expected"; `

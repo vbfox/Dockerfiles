@@ -1,8 +1,8 @@
 $repo = 'vbfox/fable-build'
-$aspnet_version = '2.1.301'
-$mono_version = '5.12.0.226'
-$node_version = '10.5.0'
-$yarn_version = '1.7.0'
+$aspnet_version = '2.1.401'
+$mono_version = '5.14.0.177'
+$node_version = '10.9.0'
+$yarn_version = '1.9.4'
 
 $tag = "stretch-aspnet-${aspnet_version}-mono-${mono_version}-node-${node_version}-yarn-${yarn_version}"
 $altTag = "stretch-aspnet-${aspnet_version}-node-${node_version}"
