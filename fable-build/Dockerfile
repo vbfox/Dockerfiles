@@ -1,11 +1,11 @@
-ARG ASPNET_VERSION=2.1.401
+ARG ASPNET_VERSION=3.0.100
 
-FROM microsoft/dotnet:${ASPNET_VERSION}-sdk-stretch
+FROM mcr.microsoft.com/dotnet/core/sdk:${ASPNET_VERSION}-buster
 
 # Install Mono
-ARG MONO_VERSION=5.14.0.177
+ARG MONO_VERSION=6.4.0.198
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF \
-  && echo "deb http://download.mono-project.com/repo/debian stable-stretch/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official-stable.list \
+  && echo "deb http://download.mono-project.com/repo/debian stable-buster/snapshots/$MONO_VERSION main" > /etc/apt/sources.list.d/mono-official-stable.list \
   && cat /etc/apt/sources.list.d/mono-official-stable.list \
   && apt-get update \
   && apt-get install -y mono-runtime binutils curl mono-devel ca-certificates-mono fsharp mono-vbnc nuget referenceassemblies-pcl \
@@ -34,7 +34,7 @@ RUN set -ex \
     gpg --keyserver hkp://pgp.mit.edu:80 --recv-keys "$key" ; \
   done
 
-ENV NODE_VERSION 10.9.0
+ENV NODE_VERSION 13.0.1
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \
@@ -55,7 +55,7 @@ RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # Install Yarn
-ARG YARN_VERSION=1.9.4
+ARG YARN_VERSION=1.19.1
 RUN set -ex \
   && for key in \
     E21930C4D0A4AA4618581F7AE074D16EB6FF4DE3 \
@@ -76,7 +76,7 @@ RUN set -ex \
 # Install Chrome driver (For testing in selenium)
 # For selenium to work it need an X server running, xvfb is a framebuffer based one and can be used like that:
 #     xvfb-run -a ./your-build-script-using-selenium.sh
-ENV CHROME_DRIVER_VERSION 2.41
+ENV CHROME_DRIVER_VERSION 78.0.3904.70
 
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
       && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' \
